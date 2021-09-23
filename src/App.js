@@ -14,6 +14,18 @@ class App extends React.Component {
     this.requestApi();
   }
 
+  shouldComponentUpdate(_nextProps, nextState) {
+    if (nextState.dogImage.message.includes('terrier')) return false;
+    return true;
+  }
+
+  componentDidUpdate() {
+    const { dogImage: message } = this.state;
+    localStorage.setItem('dog', JSON.stringify(message));
+    const breed = message.message.split('/')[4];
+    alert(breed);
+  }
+
   async requestApi() {
     const endPoint = 'https://dog.ceo/api/breeds/image/random';
     const request = await fetch(endPoint);
@@ -27,7 +39,8 @@ class App extends React.Component {
     return (
       <div className="App">
         { dogImage === undefined ? loading
-          : <img src={ dogImage.message } alt="Cachorro aleatório" /> }
+          : <img src={ dogImage.message } alt="Cachorro aleatório" width="400px" /> }
+        <br />
         <button type="button" onClick={ this.requestApi }>
           Buscar outro Cachorro
         </button>
